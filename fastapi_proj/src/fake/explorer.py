@@ -37,9 +37,9 @@ def replace_explorer(explorer: Explorer) -> Explorer:
     return explorer
 
 
-def delete_explorer(name: str) -> str | None:
+def delete_explorer(name: str) -> Explorer | None:
     for explorer in fake_explores:
         if explorer.name == name:
             fake_explores.remove(explorer)
-            return f"explorer {explorer} has been deleted"
+            return explorer
     return None
