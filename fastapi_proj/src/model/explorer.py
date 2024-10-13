@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Explorer:
+class Explorer(BaseModel):
     name: str
     country: str
     description: str

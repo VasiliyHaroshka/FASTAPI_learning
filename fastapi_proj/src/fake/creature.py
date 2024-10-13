@@ -1,4 +1,4 @@
-from ..model.creature import Creature
+from model.creature import Creature
 
 fake_creatures = [
     Creature(
