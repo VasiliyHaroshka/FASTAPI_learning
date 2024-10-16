@@ -1,22 +1,27 @@
+from data.init import conn, cur
 from model.creature import Creature
 import sqlite3
 
-DB_NAME = "Creature.db"
-conn = sqlite3.connect(DB_NAME)
-cur = conn.cursor()
-
-
-def init():
-    cur.execute(
-        """CREATE TABLE Creature 
-        IF NOT EXISTS 
-        (name, description, country, area, aka)"""
-    )
+cur.execute(
+    """CREATE TABLE IF NOT EXISTS Creature(
+    name text PRIMARY KEY, 
+    description text, 
+    country text, 
+    area text, 
+    aka text
+    )"""
+)
 
 
 def row_to_model(row: tuple) -> Creature:
     name, description, country, area, aka = row
-    return Creature(name, description, country, area, aka)
+    return Creature(
+        name=name,
+        description=description,
+        country=country,
+        area=area,
+        aka=aka
+    )
 
 
 def model_to_dict(creature: Creature) -> dict:
@@ -34,24 +39,35 @@ def get_one(name: str) -> Creature:
 def get_all() -> list[Creature]:
     query = "SELECT * FROM Creature"
     cur.execute(query)
-    rows = list(cur.fetchmany())
+    rows = cur.fetchall()
     return [row_to_model(row) for row in rows]
 
 
-def create(creature: Creature):
+def create(creature: Creature) -> Creature:
     query = """INSERT INTO Creature VALUES
     (:name, :description, :country, :area, :aka)"""
     params = model_to_dict(creature)
     cur.execute(query, params)
+    return get_one(creature.name)
 
 
 def modify(crature: Creature) -> Creature:
-    return creature
+    query = """UPDATE Creature SET
+    name=:name,
+    country=:country,
+    description=:description,
+    area=:area,
+    aka=:aka
+    WHERE name=:name_from_query
+    """
+    params = model_to_dict(crature)
+    params["name_from_query"] = crature.name
+    cur.execute(query, params)
+    return get_one(creature.name)
 
-def replace(crature: Creature) -> Creature:
-    return creature
 
-def delete(craeture: Creature):
+def delete(craeture: Creature) -> bool:
     query = "DELETE FROM Creatures WHERE name=:name"
     params = {"name": craeture.name}
-    cur.execute(query, params)
+    result = cur.execute(query, params)
+    return bool(result)
