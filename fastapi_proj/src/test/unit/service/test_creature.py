@@ -18,6 +18,6 @@ def test_get_and_exist():
     result = from_my_code.get_one(sample.name)
     assert result == sample
 
-def test_get_not_found():
+def test_not_found():
     result = from_my_code.get_one("boris")
     assert result is None
