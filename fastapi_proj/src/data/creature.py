@@ -1,6 +1,5 @@
-from data.init import conn, cur
+from data.init import cur
 from model.creature import Creature
-import sqlite3
 
 cur.execute(
     """CREATE TABLE IF NOT EXISTS Creature(
