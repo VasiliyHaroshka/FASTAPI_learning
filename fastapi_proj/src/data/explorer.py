@@ -3,7 +3,7 @@ from model.explorer import Explorer
 
 cur.execute("""
     CREATE TABLE IF NOT EXISTS Explorer(
-    name text PRIMARY KEY,
+    name PRIMARY KEY,
     country text,
     description text)
 """)
@@ -28,8 +28,8 @@ def get_one(name: str) -> Explorer:
 
 def get_all() -> list[Explorer]:
     query = "SELECT * FROM Explorer"
-    explorers = cur.execute(query).fetchall()
-    return [row_to_model(explorer) for explorer in explorers]
+    cur.execute(query).fetchall()
+    return [row_to_model(explorer) for explorer in cur.fetchall()]
 
 
 def create(explorer: Explorer) -> Explorer:

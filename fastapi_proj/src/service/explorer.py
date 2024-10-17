@@ -1,26 +1,22 @@
-from fake import explorer as data
+from data import explorer as data
 from model.explorer import Explorer
 
 
 def get_all() -> list[Explorer]:
-    return data.get_all_explores()
+    return data.get_all()
 
 
-def get_one(name: str) -> Explorer | None:
-    return data.get_one_explorer(name)
+def get_one(name: str) -> Explorer:
+    return data.get_one(name)
 
 
 def create(explorer: Explorer) -> Explorer:
-    return data.create_explorer(explorer)
-
-
-def replace(explorer: Explorer) -> Explorer:
-    return data.replace_explorer(explorer)
+    return data.create(explorer)
 
 
 def modify(explorer: Explorer) -> Explorer:
-    return data.update_explorer(explorer)
+    return data.modify(explorer)
 
 
-def delete(name: str) -> Explorer | None:
-    return data.delete_explorer(name)
+def delete(explorer: Explorer) -> bool:
+    return data.delete(explorer)
