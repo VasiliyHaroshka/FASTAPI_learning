@@ -60,7 +60,7 @@ def modify(creature: Creature) -> Creature:
     aka=:aka
     WHERE name=:name_from_query
     """
-    params = model_to_dict(crature)
+    params = model_to_dict(creature)
     params["name_from_query"] = creature.name
     curs.execute(query, params)
     return get_one(creature.name)

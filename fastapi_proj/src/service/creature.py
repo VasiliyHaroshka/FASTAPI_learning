@@ -18,5 +18,5 @@ def modify(creature: Creature) -> Creature:
     return data.modify(creature)
 
 
-def delete(creature: Creature) -> bool:
-    return data.delete(creature)
+def delete(name: str) -> bool:
+    return data.delete(name)

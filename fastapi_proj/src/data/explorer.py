@@ -1,17 +1,19 @@
-from data.init import cur
+from data.init import curs
 from model.explorer import Explorer
 
-cur.execute("""
+curs.execute("""
     CREATE TABLE IF NOT EXISTS Explorer(
-    name PRIMARY KEY,
+    name text PRIMARY KEY,
     country text,
-    description text)
-""")
+    description text)""")
 
 
 def row_to_model(row: tuple) -> Explorer:
-    name, country, description = row
-    return Explorer(name, country, description)
+    return Explorer(
+        name=row[0],
+        country=row[1],
+        description=row[2],
+    )
 
 
 def model_to_dict(explorer: Explorer) -> dict:
@@ -22,21 +24,21 @@ def model_to_dict(explorer: Explorer) -> dict:
 def get_one(name: str) -> Explorer:
     query = "SELECT * FROM Explorer WHERE name=:name"
     params = {"name": name}
-    cur.execute(query, params)
-    return row_to_model(cur.fetchone())
+    curs.execute(query, params)
+    return row_to_model(curs.fetchone())
 
 
 def get_all() -> list[Explorer]:
     query = "SELECT * FROM Explorer"
-    cur.execute(query).fetchall()
-    return [row_to_model(explorer) for explorer in cur.fetchall()]
+    curs.execute(query).fetchall()
+    return [row_to_model(explorer) for explorer in curs.fetchall()]
 
 
 def create(explorer: Explorer) -> Explorer:
-    query = """INSERT INTO Explorer name, country, description
-                VALUES(:name, :country, :description)"""
+    query = """INSERT INTO Explorer (name, country, description)
+                VALUES (:name, :country, :description)"""
     params = model_to_dict(explorer)
-    cur.execute(query, params)
+    _ = curs.execute(query, params)
     return get_one(explorer.name)
 
 
@@ -48,7 +50,7 @@ def modify(name: str, explorer: Explorer) -> Explorer:
     WHERE name:=name_from_query"""
     params = model_to_dict(explorer)
     params["name_from_query"] = explorer.name
-    cur.execute(query, params)
+    curs.execute(query, params)
     new_explorer = get_one(explorer.name)
     return new_explorer
 
@@ -56,5 +58,5 @@ def modify(name: str, explorer: Explorer) -> Explorer:
 def delete(explorer: Explorer) -> bool:
     query = """DELETE FROM Explorer WHERE name=:name"""
     params = {"name": explorer.name}
-    result = cur.execute(query, params)
+    result = curs.execute(query, params)
     return bool(result)

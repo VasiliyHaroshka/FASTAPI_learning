@@ -6,6 +6,7 @@ from model.explorer import Explorer
 router = APIRouter(prefix="/explorer")
 
 
+@router.get("")
 @router.get("/")
 def get_all() -> list[Explorer]:
     return service.get_all()
