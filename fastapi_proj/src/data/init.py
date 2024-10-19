@@ -3,12 +3,12 @@ from sqlite3 import connect, Connection
 import os
 
 conn: Connection | None = None
-cur: Connection | None = None
+curs: Connection | None = None
 
 
 def get_db(name: str | None = None, reset: bool = False):
     """Connect to file SQLite"""
-    global conn, cur
+    global conn, curs
     if conn:
         if not reset:
             return
@@ -21,7 +21,7 @@ def get_db(name: str | None = None, reset: bool = False):
         db_path = str(db_dir / db_name)
         name = os.getenv("CREATURE_SQLITE_DB", db_path)
     conn = connect(db_name, check_same_thread=False)
-    cur = conn.cursor()
+    curs = conn.cursor()
 
 
 get_db()

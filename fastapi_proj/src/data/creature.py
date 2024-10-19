@@ -1,7 +1,7 @@
-from data.init import cur
+from data.init import curs
 from model.creature import Creature
 
-cur.execute(
+curs.execute(
     """CREATE TABLE IF NOT EXISTS Creature(
     name text PRIMARY KEY, 
     description text, 
@@ -19,38 +19,39 @@ def row_to_model(row: tuple) -> Creature:
         description=description,
         country=country,
         area=area,
-        aka=aka
+        aka=aka,
     )
 
 
 def model_to_dict(creature: Creature) -> dict:
-    return creature.dict()
+    if creature:
+        return creature.dict()
 
 
 def get_one(name: str) -> Creature:
     query = "SELECT * FROM Creature WHERE name=:name"
     params = {"name": name}
-    cur.execute(query, params)
-    row = cur.fetchone()
+    curs.execute(query, params)
+    row = curs.fetchone()
     return row_to_model(row)
 
 
 def get_all() -> list[Creature]:
     query = "SELECT * FROM Creature"
-    cur.execute(query)
-    rows = cur.fetchall()
+    curs.execute(query)
+    rows = curs.fetchall()
     return [row_to_model(row) for row in rows]
 
 
 def create(creature: Creature) -> Creature:
-    query = """INSERT INTO Creature VALUES
-    (:name, :description, :country, :area, :aka)"""
+    query = """INSERT INTO Creature (name, country, area, description, aka)
+    VALUES (:name, :description, :country, :area, :aka)"""
     params = model_to_dict(creature)
-    cur.execute(query, params)
+    curs.execute(query, params)
     return get_one(creature.name)
 
 
-def modify(crature: Creature) -> Creature:
+def modify(creature: Creature) -> Creature:
     query = """UPDATE Creature SET
     name=:name,
     country=:country,
@@ -60,13 +61,13 @@ def modify(crature: Creature) -> Creature:
     WHERE name=:name_from_query
     """
     params = model_to_dict(crature)
-    params["name_from_query"] = crature.name
-    cur.execute(query, params)
+    params["name_from_query"] = creature.name
+    curs.execute(query, params)
     return get_one(creature.name)
 
 
-def delete(craeture: Creature) -> bool:
+def delete(name: str) -> bool:
     query = "DELETE FROM Creatures WHERE name=:name"
-    params = {"name": craeture.name}
-    result = cur.execute(query, params)
+    params = {"name": name}
+    result = curs.execute(query, params)
     return bool(result)

@@ -23,7 +23,7 @@ def create(creature: Creature) -> Creature:
 
 @router.patch("/")
 def create(creature: Creature) -> Creature:
-    return service.modify(creature)
+    return service.create(creature)
 
 
 @router.put("/")
@@ -32,5 +32,5 @@ def create(creature: Creature) -> Creature:
 
 
 @router.delete("/{name}")
-def delete(creature: Creature) -> bool:
-    return service.delete(creature)
+def delete(name: str) -> bool:
+    return service.delete(name)
