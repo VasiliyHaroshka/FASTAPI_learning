@@ -1,18 +1,23 @@
-from data.init import curs
+from data.init import curs, IntegrityError
+from error import Missing, Duplicate
 from model.explorer import Explorer
 
-curs.execute("""
+curs.execute(
+    """
     CREATE TABLE IF NOT EXISTS Explorer(
     name text PRIMARY KEY,
     country text,
-    description text)""")
+    description text,
+    )"""
+)
 
 
 def row_to_model(row: tuple) -> Explorer:
+    name, country, description = row
     return Explorer(
-        name=row[0],
-        country=row[1],
-        description=row[2],
+        name=name,
+        country=country,
+        description=description,
     )
 
 
@@ -25,20 +30,28 @@ def get_one(name: str) -> Explorer:
     query = "SELECT * FROM Explorer WHERE name=:name"
     params = {"name": name}
     curs.execute(query, params)
-    return row_to_model(curs.fetchone())
+    row = curs.fetchone()
+    if row:
+        return row_to_model(row)
+    raise Missing(msg=f"Explorer {name} is not found")
 
 
 def get_all() -> list[Explorer]:
     query = "SELECT * FROM Explorer"
-    curs.execute(query).fetchall()
-    return [row_to_model(explorer) for explorer in curs.fetchall()]
+    curs.execute(query)
+    return [row_to_model(row) for row in curs.fetchall()]
 
 
 def create(explorer: Explorer) -> Explorer:
+    if not explorer:
+        return None
     query = """INSERT INTO Explorer (name, country, description)
                 VALUES (:name, :country, :description)"""
     params = model_to_dict(explorer)
-    _ = curs.execute(query, params)
+    try:
+        curs.execute(query, params)
+    except IntegrityError:
+        raise Duplicate(msg=f"Explorer {explorer.name} is already exists in db")
     return get_one(explorer.name)
 
 
@@ -51,12 +64,16 @@ def modify(name: str, explorer: Explorer) -> Explorer:
     params = model_to_dict(explorer)
     params["name_from_query"] = explorer.name
     curs.execute(query, params)
-    new_explorer = get_one(explorer.name)
-    return new_explorer
+    if curs.rowcount == 1:
+        return get_one(explrer.name)
+    raise Missing(msg=f"Explorer {name} is not found")
 
 
-def delete(explorer: Explorer) -> bool:
+def delete(name: str):
+    if not name:
+        return False
     query = """DELETE FROM Explorer WHERE name=:name"""
     params = {"name": explorer.name}
-    result = curs.execute(query, params)
-    return bool(result)
+    curs.execute(query, params)
+    if curs.rowcount != 1:
+        raise Missing(msg=f"Explorer {name} is not found")

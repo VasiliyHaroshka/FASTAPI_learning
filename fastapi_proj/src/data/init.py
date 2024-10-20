@@ -1,5 +1,5 @@
 from pathlib import Path
-from sqlite3 import connect, Connection
+from sqlite3 import connect, Connection, IntegrityError
 import os
 
 conn: Connection | None = None
