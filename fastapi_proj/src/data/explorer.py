@@ -1,5 +1,5 @@
 from data.init import curs, IntegrityError
-from error import Missing, Duplicate
+from error import Duplicate, Missing
 from model.explorer import Explorer
 
 curs.execute(
@@ -73,7 +73,7 @@ def delete(name: str):
     if not name:
         return False
     query = """DELETE FROM Explorer WHERE name=:name"""
-    params = {"name": explorer.name}
+    params = {"name": name}
     curs.execute(query, params)
     if curs.rowcount != 1:
         raise Missing(msg=f"Explorer {name} is not found")
