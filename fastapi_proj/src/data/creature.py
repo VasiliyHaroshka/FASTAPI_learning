@@ -41,8 +41,7 @@ def get_one(name: str) -> Creature:
 def get_all() -> list[Creature]:
     query = "SELECT * FROM Creature"
     curs.execute(query)
-    rows = curs.fetchall()
-    return [row_to_model(row) for row in rows]
+    return [row_to_model(row) for row in curs.fetchall()]
 
 
 def create(creature: Creature) -> Creature:
@@ -65,7 +64,10 @@ def modify(name: str, creature: Creature) -> Creature:
     params = model_to_dict(creature)
     params["name_from_query"] = name
     curs.execute(query, params)
-    return get_one(creature.name)
+    if curs.rowcount == 1:
+        return get_one(creature.name)
+    else:
+        raise Missing(msg=f"Creature {name} not found")
 
 
 def delete(name: str):
