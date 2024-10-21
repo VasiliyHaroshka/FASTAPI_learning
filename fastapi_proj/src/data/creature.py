@@ -53,17 +53,17 @@ def create(creature: Creature) -> Creature:
     return get_one(creature.name)
 
 
-def modify(creature: Creature) -> Creature:
+def modify(name: str, creature: Creature) -> Creature:
     query = """UPDATE Creature SET
     name=:name,
     country=:country,
-    description=:description,
     area=:area,
+    description=:description,
     aka=:aka
     WHERE name=:name_from_query
     """
     params = model_to_dict(creature)
-    params["name_from_query"] = creature.name
+    params["name_from_query"] = name
     curs.execute(query, params)
     return get_one(creature.name)
 

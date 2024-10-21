@@ -1,3 +1,5 @@
+from zipapp import create_archive
+
 import pytest
 import os
 
@@ -33,6 +35,25 @@ def test_get_one(sample):
     result = creature.get_one(sample.name)
     assert result == sample
 
+
 def test_get_one_missing(sample):
     with pytest.raises(Missing):
         _ = creature.get_one("Loki")
+
+
+def test_modify(sample):
+    creature.country = "LAT"
+    result = creature.modify(sample.name, sample)
+    assert result == sample
+
+
+def test_modify_missing(sample):
+    another_sample: Creature = Creature(
+        name="Monster",
+        country="FR",
+        area="Paris",
+        description="",
+        aka="",
+    )
+    with pytest.raises(Missing):
+        _ = creature.modify(another_sample.name, another_sample)
