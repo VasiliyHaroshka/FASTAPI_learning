@@ -68,8 +68,9 @@ def modify(name: str, creature: Creature) -> Creature:
     return get_one(creature.name)
 
 
-def delete(name: str) -> bool:
-    query = "DELETE FROM Creatures WHERE name=:name"
+def delete(name: str):
+    query = "DELETE FROM Creature WHERE name=:name"
     params = {"name": name}
-    result = curs.execute(query, params)
-    return bool(result)
+    curs.execute(query, params)
+    if curs.rowcount == 1:
+        raise Missing(msg=f"Creature {name} is not found")

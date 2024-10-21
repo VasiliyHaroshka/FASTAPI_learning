@@ -1,5 +1,3 @@
-from zipapp import create_archive
-
 import pytest
 import os
 
@@ -57,3 +55,13 @@ def test_modify_missing(sample):
     )
     with pytest.raises(Missing):
         _ = creature.modify(another_sample.name, another_sample)
+
+
+def test_delete(sample):
+    result = creature.delete(sample.name)
+    assert result is None
+
+
+def test_delete_missing(sample):
+    with pytest.raises(Missing):
+        _ = creature.delete(sample.name)
