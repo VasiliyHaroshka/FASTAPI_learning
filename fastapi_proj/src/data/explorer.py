@@ -2,14 +2,11 @@ from data.init import curs, IntegrityError
 from error import Duplicate, Missing
 from model.explorer import Explorer
 
-curs.execute(
-    """
+curs.execute("""
     CREATE TABLE IF NOT EXISTS Explorer(
     name text PRIMARY KEY,
     country text,
-    description text,
-    )"""
-)
+    description text)""")
 
 
 def row_to_model(row: tuple) -> Explorer:

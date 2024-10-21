@@ -45,7 +45,7 @@ def get_all() -> list[Creature]:
 
 def create(creature: Creature) -> Creature:
     query = """INSERT INTO Creature (name, country, area, description, aka)
-    VALUES (:name, :description, :country, :area, :aka)"""
+    VALUES (:name, :country, :area, :description, :aka)"""
     params = model_to_dict(creature)
     curs.execute(query, params)
     return get_one(creature.name)
