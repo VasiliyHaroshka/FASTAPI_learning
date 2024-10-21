@@ -1,24 +1,23 @@
 from data.init import curs
+from error import Missing
 from model.creature import Creature
 
 curs.execute(
     """CREATE TABLE IF NOT EXISTS Creature(
     name text PRIMARY KEY, 
-    description text, 
     country text, 
     area text, 
-    aka text
-    )"""
-)
+    description text, 
+    aka text)""")
 
 
 def row_to_model(row: tuple) -> Creature:
-    name, description, country, area, aka = row
+    name, country, area, description, aka = row
     return Creature(
         name=name,
-        description=description,
         country=country,
         area=area,
+        description=description,
         aka=aka,
     )
 
@@ -33,7 +32,10 @@ def get_one(name: str) -> Creature:
     params = {"name": name}
     curs.execute(query, params)
     row = curs.fetchone()
-    return row_to_model(row)
+    if row:
+        return row_to_model(row)
+    else:
+        raise Missing(msg=f"Creature {name} is not found")
 
 
 def get_all() -> list[Creature]:

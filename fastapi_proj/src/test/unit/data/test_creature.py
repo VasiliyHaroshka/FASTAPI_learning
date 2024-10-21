@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from error import Duplicate
+from error import Duplicate, Missing
 from model.creature import Creature
 
 os.environ["CREATURE_SQLITE_DB"] = ":memory:"
@@ -25,5 +25,14 @@ def test_create(sample):
 
 
 def test_create_duclicate(sample):
-   with pytest.raises(Duplicate):
-       _ = creature.create(sample)
+    with pytest.raises(Duplicate):
+        _ = creature.create(sample)
+
+
+def test_get_one(sample):
+    result = creature.get_one(sample.name)
+    assert result == sample
+
+def test_get_one_missing(sample):
+    with pytest.raises(Missing):
+        _ = creature.get_one("Loki")
