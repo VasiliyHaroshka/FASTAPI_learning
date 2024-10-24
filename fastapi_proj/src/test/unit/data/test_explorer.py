@@ -35,3 +35,19 @@ def test_get_one(sample):
 def test_get_one_missing():
     with pytest.raises(Missing):
         _ = explorer.get_one("Mike")
+
+
+def test_modify(sample):
+    explorer.country = "D"
+    result = explorer.modify(sample.name, sample)
+    assert result == sample
+
+
+def test_modify_missing():
+    another_sample: Explorer = Explorer(
+        name="Bob",
+        country="PL",
+        description="pan Bob",
+    )
+    with pytest.raises(Missing):
+        _ = explorer.modify(another_sample.name, another_sample)

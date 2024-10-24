@@ -57,12 +57,12 @@ def modify(name: str, explorer: Explorer) -> Explorer:
     name=:name,
     country=:country,
     description=:description
-    WHERE name:=name_from_query"""
+    WHERE name=:name_from_query"""
     params = model_to_dict(explorer)
     params["name_from_query"] = explorer.name
     curs.execute(query, params)
     if curs.rowcount == 1:
-        return get_one(explrer.name)
+        return get_one(explorer.name)
     raise Missing(msg=f"Explorer {name} is not found")
 
 
