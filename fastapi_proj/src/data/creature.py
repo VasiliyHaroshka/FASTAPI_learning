@@ -71,6 +71,8 @@ def modify(name: str, creature: Creature) -> Creature:
 
 
 def delete(name: str):
+    if not name:
+        return False
     query = "DELETE FROM Creature WHERE name=:name"
     params = {"name": name}
     curs.execute(query, params)

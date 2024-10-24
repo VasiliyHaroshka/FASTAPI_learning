@@ -51,3 +51,13 @@ def test_modify_missing():
     )
     with pytest.raises(Missing):
         _ = explorer.modify(another_sample.name, another_sample)
+
+
+def test_delete(sample):
+    result = explorer.delete(sample.name)
+    assert result is None
+
+
+def test_delete_missing(sample):
+    with pytest.raises(Missing):
+        _ = explorer.delete(sample.name)
