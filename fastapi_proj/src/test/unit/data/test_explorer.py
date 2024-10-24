@@ -15,3 +15,13 @@ def sample() -> Explorer:
         country="US",
         description="Superman",
     )
+
+
+def test_create(sample):
+    result = explorer.create(sample)
+    assert result == sample
+
+
+def test_crate_duplicate(sample):
+    with pytest.raises(Duplicate):
+        _ = explorer.create(sample)
