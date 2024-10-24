@@ -25,3 +25,13 @@ def test_create(sample):
 def test_crate_duplicate(sample):
     with pytest.raises(Duplicate):
         _ = explorer.create(sample)
+
+
+def test_get_one(sample):
+    result = explorer.get_one(sample.name)
+    assert result == sample
+
+
+def test_get_one_missing():
+    with pytest.raises(Missing):
+        _ = explorer.get_one("Mike")
