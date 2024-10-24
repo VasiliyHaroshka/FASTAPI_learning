@@ -20,7 +20,7 @@ def row_to_model(row: tuple) -> Explorer:
 
 def model_to_dict(explorer: Explorer) -> dict:
     if explorer:
-        return explorer.dict()
+        return explorer.model_dump()
 
 
 def get_one(name: str) -> Explorer:
