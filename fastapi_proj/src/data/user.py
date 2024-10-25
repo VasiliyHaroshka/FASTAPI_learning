@@ -15,3 +15,15 @@ curs.execute("""
     name text PRIMARY KEY,
     hash text
     )""")
+
+
+def row_to_model(row: tuple) -> User:
+    name, hash = row
+    return User(
+        name=name,
+        hash=hash
+    )
+
+
+def model_to_dict(user: User) -> dict:
+    return user.model_dump()
