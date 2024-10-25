@@ -56,3 +56,17 @@ def create(user: User, table: str = "user"):
         curs.execute(query, params)
     except IntegrityError:
         raise Duplicate(f"User with username = {name} is alraesy exists in table {table}")
+
+
+def modify(name: str, user: User) -> User:
+    query = """UPDATE User SET (name=:name, hash:=hash)
+    WHERE name=:name_from_query"""
+    params = {
+        "name": user.name,
+        "hash": user.hash,
+        "name_from_query": name,
+    }
+    curs.execute(query, params)
+    if curs.rowcount == 1:
+        return get_one(user.name)
+    raise Missing(f"User with username = {name} is not found")
