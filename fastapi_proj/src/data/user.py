@@ -41,3 +41,9 @@ def get_one(name: str) -> User:
     if row:
         return row_to_model(row)
     raise Missing(f"User with username = {name} is not found")
+
+
+def get_all() -> list[User]:
+    query = "SELECT * FROM User"
+    curs.execute(query)
+    return [row_to_model(row) for row in curs.fetchall()]
