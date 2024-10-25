@@ -47,3 +47,12 @@ def get_all() -> list[User]:
     query = "SELECT * FROM User"
     curs.execute(query)
     return [row_to_model(row) for row in curs.fetchall()]
+
+
+def create(user: User, table: str = "user"):
+    query = f"INSERT INTO {table} (name, hash) VALUES (:name, :hash)"
+    params = model_to_dict(user)
+    try:
+        curs.execute(query, params)
+    except IntegrityError:
+        raise Duplicate(f"User with username = {name} is alraesy exists in table {table}")
