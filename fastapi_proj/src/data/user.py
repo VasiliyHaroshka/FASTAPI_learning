@@ -70,3 +70,13 @@ def modify(name: str, user: User) -> User:
     if curs.rowcount == 1:
         return get_one(user.name)
     raise Missing(f"User with username = {name} is not found")
+
+
+def delete(name: str) -> None:
+    user = get_one(name)
+    query = "DELETE FROM User WHERE name=:name"
+    params = {"name": name}
+    curs.execute(query, params)
+    if curs.rowcount != 1:
+        raise Missing(f"User with username = {name} is not found")
+    create(user, table="xuser")
