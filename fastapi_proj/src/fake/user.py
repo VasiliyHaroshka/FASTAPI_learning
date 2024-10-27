@@ -1,4 +1,4 @@
-from error import Missing
+from error import Missing, Duplicate
 from model.user import User
 
 fake_users = [
@@ -23,3 +23,8 @@ def find(name: str) -> User | None:
 def check_missing(name: str):
     if not find(name):
         raise Missing(msg=f"User with name = {name} is not found")
+
+def check_duplicate(name: str):
+    if find(name):
+        raise Duplicate(msg=f"User with name = {name} has duplicate in db")
+
