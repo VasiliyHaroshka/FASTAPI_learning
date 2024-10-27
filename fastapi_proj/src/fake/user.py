@@ -24,7 +24,16 @@ def check_missing(name: str):
     if not find(name):
         raise Missing(msg=f"User with name = {name} is not found")
 
+
 def check_duplicate(name: str):
     if find(name):
         raise Duplicate(msg=f"User with name = {name} has duplicate in db")
 
+
+def get_all(): -> list[User]:
+    return fake_users
+
+
+def get_one(name: str) -> User | None:
+    check_missing(name)
+    return find(name)
