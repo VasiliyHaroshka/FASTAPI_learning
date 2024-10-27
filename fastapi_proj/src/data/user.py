@@ -1,8 +1,6 @@
-from ecdsa.test_pyecdsa import params
-
 from model.user import User
 from error import Duplicate, Missing
-from .init import curs, get_db, IntegrityError
+from .init import curs, IntegrityError
 
 curs.execute("""
     CREATE TABLE IF NOT EXISTS 
