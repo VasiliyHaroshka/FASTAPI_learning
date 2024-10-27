@@ -34,6 +34,20 @@ def get_all(): -> list[User]:
     return fake_users
 
 
-def get_one(name: str) -> User | None:
+def get_one(name: str) -> User:
     check_missing(name)
     return find(name)
+
+
+def create(user: User) -> User:
+    check_duplicate(name)
+    return user
+
+
+def modify(name: str, user: User) -> User:
+    check_missing(name)
+    return user
+
+def delete(name: str) -> None:
+    check_missing(name)
+    return None
