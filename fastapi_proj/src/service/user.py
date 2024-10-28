@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta, datetime
 
 from jose import jwt
 from jose.exceptions import JWTError
@@ -35,17 +36,37 @@ def get_jwt_username(token: str) -> str | None:
     return username
 
 
-def lookup_user(username: str) -> User | None:
+def get_user(username: str) -> User | None:
     user = data.get_one(username)
     if user:
         return user
     return None
 
+
 def get_current_user(token: str) -> User | None:
     username = get_jwt_username(token)
     if not username:
         return None
-    user = lookup_user(username)
+    user = get_user(username)
     if user:
         return user
     return None
+
+
+def auth_user(name: str, plain: str) -> User | None:
+    user = get_user(name)
+    if not user:
+        return None
+    if not verify_password(plain, user.hash):
+        return None
+    return user
+
+
+def create_access_token(data: dict, expires: timedelta | None = None):
+    src: dict = data.copy()
+    now: datetime = datetime.now()
+    if not expires:
+        expires = timedelta(minutes=15)
+    src.update({"exp": now + expires})
+    encode_jwt: str = jwt.encode(src, SECRET_KEY, algorithm=ALGORITHM)
+    return encode_jwt
