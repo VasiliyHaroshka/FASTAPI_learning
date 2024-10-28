@@ -40,8 +40,9 @@ def get_one(name: str) -> User:
 
 
 def create(user: User) -> User:
-    check_duplicate(name)
+    check_duplicate(user.name)
     return user
+
 
 
 def modify(name: str, user: User) -> User:
