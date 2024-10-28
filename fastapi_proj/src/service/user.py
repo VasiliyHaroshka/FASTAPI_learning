@@ -4,6 +4,8 @@ from jose import jwt
 from jose.exceptions import JWTError
 from passlib.context import CryptContext
 
+from model.user import User
+
 if os.getenv("CREATURE_UNIT_TEST"):
     from fake import user as data
 else:
@@ -31,3 +33,19 @@ def get_jwt_username(token: str) -> str | None:
     except JWTError:
         return None
     return username
+
+
+def lookup_user(username: str) -> User | None:
+    user = data.get_one(username)
+    if user:
+        return user
+    return None
+
+def get_current_user(token: str) -> User | None:
+    username = get_jwt_username(token)
+    if not username:
+        return None
+    user = lookup_user(username)
+    if user:
+        return user
+    return None
