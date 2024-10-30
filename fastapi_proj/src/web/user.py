@@ -25,6 +25,7 @@ def unauthorised():
         headers={"WWW-Authenticate": "Bearer"},
     )
 
+
 @router.post("/token")
 async def create_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = service.auth_user(
@@ -39,3 +40,9 @@ async def create_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
         expires=expires,
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/token")
+def get_access_token(token: str = Depends(oauth2_dependency)) -> dict:
+    """Return current access token"""
+    return {"token": token}
