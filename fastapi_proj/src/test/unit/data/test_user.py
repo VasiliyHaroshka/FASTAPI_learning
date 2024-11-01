@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from error import Duplicate
+from error import Duplicate, Missing
 from model.user import User
 
 os.environ["CREATURE_SQLITE_DB"] = ":memory:"
@@ -29,3 +29,8 @@ def test_create_duplicate(sample):
 def test_get_one(sample):
     result = user.get_one(sample.name)
     assert result == sample
+
+
+def test_get_one_missing(sample):
+    with pytest.raises(Missing):
+        _ = user.get_one("Pit")
