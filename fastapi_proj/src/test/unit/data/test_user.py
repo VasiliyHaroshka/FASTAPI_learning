@@ -46,3 +46,8 @@ def test_modify_missing():
     other_user: User = User(name="Poll", hash="Poll's hash")
     with pytest.raises(Missing):
         _ = user.modify(other_user.name, other_user)
+
+
+def test_delete(sample):
+    result = user.delete(sample.name)
+    assert result is None
