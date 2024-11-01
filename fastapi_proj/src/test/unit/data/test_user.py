@@ -1,6 +1,7 @@
 import os
 import pytest
 
+from error import Duplicate
 from model.user import User
 
 os.environ["CREATURE_SQLITE_DB"] = ":memory:"
@@ -18,3 +19,8 @@ def sample() -> User:
 def test_create(sample):
     result = user.create(sample)
     assert sample == result
+
+
+def test_create_duplicate(sample):
+    with pytest.raises(Duplicate):
+        _ = user.create(sample)
