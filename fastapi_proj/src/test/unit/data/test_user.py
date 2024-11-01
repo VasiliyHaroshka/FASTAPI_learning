@@ -51,3 +51,8 @@ def test_modify_missing():
 def test_delete(sample):
     result = user.delete(sample.name)
     assert result is None
+
+
+def test_delete_missing(sample):
+    with pytest.raises(Missing):
+        _ = user.delete(sample.name)
