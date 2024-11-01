@@ -31,7 +31,7 @@ def test_get_one(sample):
     assert result == sample
 
 
-def test_get_one_missing(sample):
+def test_get_one_missing():
     with pytest.raises(Missing):
         _ = user.get_one("Pit")
 
@@ -40,3 +40,9 @@ def test_modify(sample):
     sample.hash = "abc"
     result = user.modify(sample.name, sample)
     assert result == sample
+
+
+def test_modify_missing():
+    other_user: User = User(name="Poll", hash="Poll's hash")
+    with pytest.raises(Missing):
+        _ = user.modify(other_user.name, other_user)
