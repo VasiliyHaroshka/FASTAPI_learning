@@ -24,3 +24,8 @@ def test_create(sample):
 def test_create_duplicate(sample):
     with pytest.raises(Duplicate):
         _ = user.create(sample)
+
+
+def test_get_one(sample):
+    result = user.get_one(sample.name)
+    assert result == sample
