@@ -58,7 +58,7 @@ def create(user: User, table: str = "user") -> User:
 
 
 def modify(name: str, user: User) -> User:
-    query = """UPDATE User SET (name=:name, hash:=hash)
+    query = """UPDATE User SET name=:name, hash=:hash
     WHERE name=:name_from_query"""
     params = {
         "name": user.name,
@@ -68,7 +68,7 @@ def modify(name: str, user: User) -> User:
     curs.execute(query, params)
     if curs.rowcount == 1:
         return get_one(user.name)
-    raise Missing(f"User with username = {name} is not found")
+    raise Missing(msg=f"User with username = {name} is not found")
 
 
 def delete(name: str) -> None:
