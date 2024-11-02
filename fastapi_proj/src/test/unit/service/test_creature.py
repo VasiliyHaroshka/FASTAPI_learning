@@ -1,6 +1,7 @@
 from model.creature import Creature
 from service import creature as from_my_code
 
+
 sample = Creature(
     name="Vampire",
     country="ROM",

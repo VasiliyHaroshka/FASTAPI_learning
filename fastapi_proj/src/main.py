@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from web import explorer, creature, user
 
 app = FastAPI()
