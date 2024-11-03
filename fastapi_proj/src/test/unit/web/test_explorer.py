@@ -10,7 +10,7 @@ os.environ["CREATURE_UNIT_TEST"] = "true"
 
 
 @pytest.fixture
-def sample():
+def sample() -> Explorer:
     return Explorer(name="Ron",
                     country="ND",
                     description="Bro",
@@ -30,3 +30,13 @@ def assert_duplicates(exc: Exception):
 def assert_missing(exc: Exception):
     assert exc.value.status_code == 404
     assert "is not found" in exc.value.msg
+
+
+def test_create(sample):
+    assert explorer.create(sample) == sample
+
+
+def test_create_duplicates(fakes):
+    with pytest.raises(HTTPException) as exc:
+        _ = explorer.create(fakes[0])
+        assert_duplicates(exc)
