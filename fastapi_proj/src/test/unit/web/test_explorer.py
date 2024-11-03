@@ -20,3 +20,13 @@ def sample():
 @pytest.fixture
 def fakes() -> list[Explorer]:
     return explorer.get_all()
+
+
+def assert_duplicates(exc: Exception):
+    assert exc.value.status_code == 404
+    assert "is already exists in db" in exc.value.msg
+
+
+def assert_missing(exc: Exception):
+    assert exc.value.status_code == 404
+    assert "is not found" in exc.value.msg
