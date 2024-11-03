@@ -14,30 +14,30 @@ fake_explores = [
 ]
 
 
-def get_all_explores() -> list[Explorer]:
+def get_all() -> list[Explorer]:
     return fake_explores
 
 
-def get_one_explorer(name: str) -> Explorer | None:
+def get_one(name: str) -> Explorer | None:
     for explorer in fake_explores:
         if explorer.name == name:
             return explorer
     return None
 
 
-def create_explorer(explorer: Explorer) -> Explorer:
+def create(explorer: Explorer) -> Explorer:
     return explorer
 
 
-def update_explorer(explorer: Explorer) -> Explorer:
+def modify(explorer: Explorer) -> Explorer:
     return explorer
 
 
-def replace_explorer(explorer: Explorer) -> Explorer:
+def replace(explorer: Explorer) -> Explorer:
     return explorer
 
 
-def delete_explorer(name: str) -> Explorer | None:
+def delete(name: str) -> Explorer | None:
     for explorer in fake_explores:
         if explorer.name == name:
             fake_explores.remove(explorer)

@@ -1,12 +1,13 @@
 import os
+from dataclasses import MISSING
 
 import pytest
 from fastapi import HTTPException
 
 from model.explorer import Explorer
-from web import explorer
 
 os.environ["CREATURE_UNIT_TEST"] = "true"
+from web import explorer
 
 
 @pytest.fixture
@@ -40,3 +41,23 @@ def test_create_duplicates(fakes):
     with pytest.raises(HTTPException) as exc:
         _ = explorer.create(fakes[0])
         assert_duplicates(exc)
+
+
+def test_get_one(fakes):
+    assert explorer.get_one(fakes[0].name) == fakes[0]
+
+
+def test_get_one_missing():
+    with pytest.raises(HTTPException) as exc:
+        _ = explorer.get_one("Nobody")
+        assert_missing(exc)
+
+
+def test_modify(fakes):
+    assert explorer.modify(fakes[0]) == fakes[0]
+
+
+def test_modify_missing(sample):
+    with pytest.raises(HTTPException) as exc:
+        _ = explorer.modify(sample.name, sample)
+        assert_missing(exc)
