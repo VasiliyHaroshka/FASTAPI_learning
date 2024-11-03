@@ -15,3 +15,8 @@ def sample():
                     country="ND",
                     description="Bro",
                     )
+
+
+@pytest.fixture
+def fakes() -> list[Explorer]:
+    return explorer.get_all()
