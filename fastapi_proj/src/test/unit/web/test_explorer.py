@@ -23,12 +23,12 @@ def fakes() -> list[Explorer]:
     return explorer.get_all()
 
 
-def assert_duplicates(exc: Exception):
+def assert_duplicates(exc):
     assert exc.value.status_code == 404
     assert "is already exists in db" in exc.value.msg
 
 
-def assert_missing(exc: Exception):
+def assert_missing(exc):
     assert exc.value.status_code == 404
     assert "is not found" in exc.value.msg
 
@@ -60,4 +60,14 @@ def test_modify(fakes):
 def test_modify_missing(sample):
     with pytest.raises(HTTPException) as exc:
         _ = explorer.modify(sample.name, sample)
+        assert_missing(exc)
+
+
+def test_delete(fakes):
+    assert explorer.delete(fakes[0].name) is None
+
+
+def test_delete_missing():
+    with pytest.raises(HTTPException) as exc:
+        _ = explorer.delete("Dr.Evil")
         assert_missing(exc)

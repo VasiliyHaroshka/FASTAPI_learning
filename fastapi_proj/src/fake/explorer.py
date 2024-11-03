@@ -41,5 +41,4 @@ def delete(name: str) -> Explorer | None:
     for explorer in fake_explores:
         if explorer.name == name:
             fake_explores.remove(explorer)
-            return explorer
-    return None
+            return None
