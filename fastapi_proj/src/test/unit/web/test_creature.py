@@ -2,6 +2,7 @@ import os
 
 import pytest
 
+from error import Duplicate
 from model.creature import Creature
 from web import creature
 
@@ -32,3 +33,12 @@ def assert_duplicates(exc):
 def assert_missing(exc):
     assert exc.value.status_code == 404
     assert "is not found" in exc.value.msg
+
+
+def test_create(sample):
+    assert creature.create(sample) == sample
+
+def test_create_duplicate(fakes):
+    with pytest.raises(Duplicate) as exc:
+        _ = creature.create(fakes[0])
+        assert_duplicates(exc)
