@@ -22,3 +22,13 @@ def sample() -> Creature:
 @pytest.fixture
 def fakes() -> list[Creature]:
     return creature.get_all()
+
+
+def assert_duplicates(exc):
+    assert exc.value.status_code == 409
+    assert "is already exists in db" in exc.value.msg
+
+
+def assert_missing(exc):
+    assert exc.value.status_code == 404
+    assert "is not found" in exc.value.msg

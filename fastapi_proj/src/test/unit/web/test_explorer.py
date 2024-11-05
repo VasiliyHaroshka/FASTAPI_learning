@@ -24,7 +24,7 @@ def fakes() -> list[Explorer]:
 
 
 def assert_duplicates(exc):
-    assert exc.value.status_code == 404
+    assert exc.value.status_code == 409
     assert "is already exists in db" in exc.value.msg
 
 
