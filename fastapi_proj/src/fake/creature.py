@@ -18,30 +18,26 @@ fake_creatures = [
 ]
 
 
-def get_all_creatures() -> list[Creature]:
+def get_all() -> list[Creature]:
     return fake_creatures
 
 
-def get_one_creature(name: str) -> Creature | None:
+def get_one(name: str) -> Creature | None:
     for creature in fake_creatures:
         if creature.name == name:
             return creature
     return None
 
 
-def create_creature(creature: Creature) -> Creature:
+def create(creature: Creature) -> Creature:
     return creature
 
 
-def update_creature(creature: Creature) -> Creature:
+def modify(creature: Creature) -> Creature:
     return creature
 
 
-def replace_creature(creature: Creature) -> Creature:
-    return creature
-
-
-def delete_creature(name: str) -> Creature | None:
+def delete(name: str) -> Creature | None:
     for creature in fake_creatures:
         if creature.name == name:
             fake_creatures.remove(creature)
