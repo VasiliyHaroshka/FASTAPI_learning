@@ -37,7 +37,7 @@ def modify(creature: Creature) -> Creature:
     return creature
 
 
-def delete_creature(name: str) -> Creature | None:
+def delete(name: str) -> Creature | None:
     for creature in fake_creatures:
         if creature.name == name:
             fake_creatures.remove(creature)
