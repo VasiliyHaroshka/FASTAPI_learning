@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from error import Duplicate
+from error import Duplicate, Missing
 
 os.environ["CREATURE_UNIT_TEST"] = "true"
 
@@ -29,5 +29,14 @@ def test_create_duplicate(sample: Creature):
     with pytest.raises(Duplicate):
         result = data.create(sample)
 
+def test_get_one(sample: Creature):
+    result = data.create(sample)
+    assert result == sample
+    result = data.get_one(sample.name)
+    assert result == sample
 
+
+def test_get_one_missing():
+    with pytest.raises(Missing):
+        _ = data.get_one("Devil")
 
