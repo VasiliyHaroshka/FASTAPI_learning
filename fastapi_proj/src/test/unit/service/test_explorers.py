@@ -4,6 +4,8 @@ import pytest
 
 from fastapi import HTTPException
 
+from test.unit.web.test_explorer import assert_duplicates
+
 os.environ["CREATURE_UNIT_TEST"] = "true"
 
 from model.explorer import Explorer
@@ -32,3 +34,13 @@ def assert_duplicate(exc):
 def assert_missing(exc):
     assert exc.value.status_code == 404
     assert "is not found" in exc.value.msg
+
+
+def test_create(sample):
+    assert explorer.create(sample) == sample
+
+
+def test_create_duplicate(fakes):
+    with pytest.raises(HTTPException) as exc:
+        _ = explorer.create(fakes[0])
+        assert_duplicates(exc)
