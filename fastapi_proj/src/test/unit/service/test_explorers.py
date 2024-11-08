@@ -11,7 +11,7 @@ from web import explorer
 
 
 @pytest.fixture
-def sample():
+def sample() -> Explorer:
     return Explorer(
         name="Bob",
         country="GB",
@@ -19,16 +19,16 @@ def sample():
     )
 
 
-def test_create():
-    result = my_code.create(sample)
-    assert result == sample
+@pytest.fixture
+def fakes() -> list[Explorer]:
+    return explorer.get_all()
 
 
-def test_get_and_exist():
-    result = my_code.get_one(sample.name)
-    assert result == sample
+def assert_duplicate(exc):
+    assert exc.value.status_code == 409
+    assert "is already exists in db" in exc.value.msg
 
 
-def test_not_found():
-    result = my_code.get_one("Max")
-    assert None is result
+def assert_missing(exc):
+    assert exc.value.status_code == 404
+    assert "is not found" in exc.value.msg
