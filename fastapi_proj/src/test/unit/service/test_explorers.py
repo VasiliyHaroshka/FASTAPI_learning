@@ -1,11 +1,22 @@
-from model.explorer import Explorer
-from service import explorer as my_code
+import os
 
-sample = Explorer(
-    name="Bob",
-    country="GB",
-    description="bla-bla-bla",
-)
+import pytest
+
+from fastapi import HTTPException
+
+os.environ["CREATURE_UNIT_TEST"] = "true"
+
+from model.explorer import Explorer
+from web import explorer
+
+
+@pytest.fixture
+def sample():
+    return Explorer(
+        name="Bob",
+        country="GB",
+        description="bla-bla-bla",
+    )
 
 
 def test_create():

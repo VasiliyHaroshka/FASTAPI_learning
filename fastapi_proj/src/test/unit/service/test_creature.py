@@ -2,10 +2,9 @@ import os
 
 import pytest
 
-from error import Duplicate, Missing
-
 os.environ["CREATURE_UNIT_TEST"] = "true"
 
+from error import Duplicate, Missing
 from model.creature import Creature
 from data import creature as data
 
