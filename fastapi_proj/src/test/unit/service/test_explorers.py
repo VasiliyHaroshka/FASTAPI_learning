@@ -44,3 +44,13 @@ def test_create_duplicate(fakes):
     with pytest.raises(HTTPException) as exc:
         _ = explorer.create(fakes[0])
         assert_duplicates(exc)
+
+
+def test_get_one(fakes):
+    assert explorer.get_one(fakes[0].name) == fakes[0]
+
+
+def test_get_one_missing():
+    with pytest.raises(HTTPException) as exc:
+        _ = explorer.get_one("Boris")
+        assert_missing(exc)
