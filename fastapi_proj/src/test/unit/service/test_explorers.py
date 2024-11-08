@@ -54,3 +54,13 @@ def test_get_one_missing():
     with pytest.raises(HTTPException) as exc:
         _ = explorer.get_one("Boris")
         assert_missing(exc)
+
+
+def test_modify(fakes):
+    assert explorer.modify(fakes[0].name, fakes[0]) == fakes[0]
+
+
+def test_modify_missing(sample):
+    with pytest.raises(HTTPException) as exc:
+        _ = explorer.modify(sample.name, sample)
+        assert_missing(exc)
