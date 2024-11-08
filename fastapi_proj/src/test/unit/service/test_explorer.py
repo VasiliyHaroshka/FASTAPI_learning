@@ -4,8 +4,6 @@ import pytest
 
 from fastapi import HTTPException
 
-from test.unit.web.test_explorer import assert_duplicates
-
 os.environ["CREATURE_UNIT_TEST"] = "true"
 
 from model.explorer import Explorer
@@ -43,7 +41,7 @@ def test_create(sample):
 def test_create_duplicate(fakes):
     with pytest.raises(HTTPException) as exc:
         _ = explorer.create(fakes[0])
-        assert_duplicates(exc)
+        assert_duplicate(exc)
 
 
 def test_get_one(fakes):
