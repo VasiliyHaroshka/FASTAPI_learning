@@ -24,7 +24,7 @@ def test_create(sample):
     assert sample == result
 
 
-def test_create_duclicate(sample):
+def test_create_duplicate(sample):
     with pytest.raises(Duplicate):
         _ = creature.create(sample)
 

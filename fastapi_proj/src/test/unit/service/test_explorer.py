@@ -63,8 +63,10 @@ def test_modify_missing(sample):
         _ = explorer.modify(sample.name, sample)
         assert_missing(exc)
 
+
 def test_delete(sample):
     assert explorer.delete(sample.name) is None
+
 
 def test_delete_missing():
     with pytest.raises(HTTPException) as exc:
