@@ -53,10 +53,22 @@ def test_get_one_missing():
         assert user.get_one("Phill")
         assert assert_missing(exc)
 
+
 def test_modify(fakes):
     assert user.modify(fakes[0].name) == fakes[0]
+
 
 def test_modify_missing(sample):
     with pytest.raises(HTTPException) as exc:
         result = user.modify(sample.name, sample)
+        assert_missing(exc)
+
+
+def test_delete(fakes):
+    assert user.delete(fakes[0].name) is None
+
+
+def test_delete_missing():
+    with pytest.raises(HTTPException) as exc:
+        result = user.delete("Mo")
         assert_missing(exc)
