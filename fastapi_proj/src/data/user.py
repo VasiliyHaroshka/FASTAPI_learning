@@ -53,7 +53,7 @@ def create(user: User, table: str = "user") -> User:
     try:
         curs.execute(query, params)
     except IntegrityError:
-        raise Duplicate(f"User with username = {user.name} is alraesy exists in the table {table}")
+        raise Duplicate(f"User with username = {user.name} is already exists in the table {table}")
     return user
 
 
