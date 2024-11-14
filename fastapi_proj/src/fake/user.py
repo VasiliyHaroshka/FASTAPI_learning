@@ -1,7 +1,9 @@
+from typing import List
+
 from error import Missing, Duplicate
 from model.user import User
 
-fake_users = [
+fake_users: list[User] = [
     User(
         name="Don",
         hash="1234",
@@ -30,7 +32,7 @@ def check_duplicate(name: str):
         raise Duplicate(msg=f"User with name = {name} has duplicate in db")
 
 
-def get_all(): -> list[User]:
+def get_all() -> list[User]:
     return fake_users
 
 
@@ -44,10 +46,10 @@ def create(user: User) -> User:
     return user
 
 
-
 def modify(name: str, user: User) -> User:
     check_missing(name)
     return user
+
 
 def delete(name: str) -> None:
     check_missing(name)
