@@ -32,3 +32,13 @@ def assert_duplicates(exc):
 def assert_missing(exc):
     assert exc.value.status_code == 404
     assert "is not found" in exc.value.msg
+
+
+def test_create(sample):
+    assert user.create(sample) == sample
+
+
+def test_create_duplicate(fakes):
+    with pytest.raises(HTTPException) as exc:
+        result = user.create(fakes[0])
+        assert_duplicates(exc)
