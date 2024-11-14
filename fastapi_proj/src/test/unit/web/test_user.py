@@ -8,4 +8,17 @@ os.environ["CREATURE_UNIT_TEST"] = "true"
 
 from error import Duplicate, Missing
 from model.user import User
+from web import user
 
+
+@pytest.fixture
+def sample():
+    return User(
+        name="Max",
+        hash="MaxPain1990",
+    )
+
+
+@pytest.fixture
+def fakes() -> list[User]:
+    return user.get_all()
