@@ -10,7 +10,7 @@ from web import user
 
 
 @pytest.fixture
-def sample():
+def sample() -> User:
     return User(
         name="Max",
         hash="MaxPain1990",

@@ -3,7 +3,7 @@ from typing import List
 from error import Missing, Duplicate
 from model.user import User
 
-fake_users: list[User] = [
+fake_users = [
     User(
         name="Don",
         hash="1234",
