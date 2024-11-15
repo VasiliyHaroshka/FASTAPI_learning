@@ -59,3 +59,13 @@ def test_modify_missing(sample):
     with pytest.raises(HTTPException) as exc:
         _ = user.modify(sample.name, sample)
         assert_missing(exc)
+
+
+def test_delete(fakes):
+    assert user.delete(fakes[0].name) is None
+
+
+def test_delete_missing():
+    with pytest.raises(HTTPException) as exc:
+        _ = user.delete("Nadia")
+        assert_missing(exc)
