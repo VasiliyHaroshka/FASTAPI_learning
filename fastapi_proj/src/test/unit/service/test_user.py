@@ -30,3 +30,12 @@ def assert_missing(exc):
     assert exc.value.status_code == 404
     assert "is not found" in exc.value.msg
 
+
+def test_get_one(sample):
+    assert user.create(sample) == sample
+
+
+def test_get_one_missing():
+    with pytest.raises(HTTPException) as exc:
+        _ = user.get_one("Jake")
+        assert assert_missing(exc)
