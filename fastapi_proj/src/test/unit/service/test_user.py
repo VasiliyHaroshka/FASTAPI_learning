@@ -39,3 +39,13 @@ def test_get_one_missing():
     with pytest.raises(HTTPException) as exc:
         _ = user.get_one("Jake")
         assert assert_missing(exc)
+
+
+def test_create(sample):
+    return user.create(sample) == sample
+
+
+def test_create_duplicate(fakes):
+    with pytest.raises(HTTPException) as exc:
+        _ = user.create(fakes[0])
+        assert_duplicates(exc)
