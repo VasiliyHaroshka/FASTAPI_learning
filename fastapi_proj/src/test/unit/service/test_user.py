@@ -49,3 +49,13 @@ def test_create_duplicate(fakes):
     with pytest.raises(HTTPException) as exc:
         _ = user.create(fakes[0])
         assert_duplicates(exc)
+
+
+def test_modify(fakes):
+    return user.modify(fakes[0].name) == fakes[0]
+
+
+def test_modify_missing(sample):
+    with pytest.raises(HTTPException) as exc:
+        _ = user.modify(sample.name, sample)
+        assert_missing(exc)
