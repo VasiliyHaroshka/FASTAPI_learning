@@ -1,5 +1,3 @@
-from typing import List
-
 from error import Missing, Duplicate
 from model.user import User
 
