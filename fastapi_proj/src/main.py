@@ -31,3 +31,13 @@ async def download(name):
 def file_generator(path: str) -> Generator:
     with open(file=path, mode="rb") as file:
         yield file.read()
+
+
+@app.get("/download2/{name}")
+async def download2(name: str):
+    generator = file_generator(path=name)
+    response = StreamingResponse(
+        content=generator,
+        status_code=200,
+    )
+    return response
