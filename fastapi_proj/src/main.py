@@ -1,16 +1,23 @@
-from pathlib import Path
 from typing import Generator
 
 from fastapi import FastAPI, File, UploadFile
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
 
 from web import explorer, creature, user
 
 app = FastAPI()
 
+app.mount(
+    "/static",
+    StaticFiles(directory="static"),
+    name="static",
+)
+
 app.include_router(explorer.router)
 app.include_router(creature.router)
 app.include_router(user.router)
+
 
 
 @app.post("/file_sizer")
