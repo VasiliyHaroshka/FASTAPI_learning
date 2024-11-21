@@ -1,8 +1,10 @@
+import os
 from typing import Generator
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, Request, Response, UploadFile
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from starlette.responses import JSONResponse
 
 from web import explorer, creature, user
 
@@ -10,14 +12,26 @@ app = FastAPI()
 
 app.mount(
     "/static",
-    StaticFiles(directory="static"),
+    StaticFiles(directory="static", html=True),
     name="static",
 )
+
+
+@app.middleware("http")
+async def static_filter(request: Request, call_next):
+    """Allow only pictures end with '.jpg' """
+    if request.url.path.startswith("/static") and not request.url.path.endswith(".jpg"):
+        return JSONResponse(
+            {"error": "only '.jpg' pictures"},
+            status_code=409,
+        )
+    response = await call_next(request)
+    return response
+
 
 app.include_router(explorer.router)
 app.include_router(creature.router)
 app.include_router(user.router)
-
 
 
 @app.post("/file_sizer")
