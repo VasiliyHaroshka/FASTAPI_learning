@@ -66,3 +66,8 @@ async def download2(name: str):
 @app.get("/who")
 def who_are_you(name: str = Form()):
     return f"Greetings, {name}!"
+
+
+@app.post("/who2")
+def who_are_you2(name: str = Form()):
+    return f"Greetings, {name}!"
