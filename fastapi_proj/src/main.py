@@ -1,10 +1,8 @@
-import os
 from typing import Generator
 
-from fastapi import FastAPI, File, Request, Response, UploadFile
+from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
-from starlette.responses import JSONResponse
 
 from web import explorer, creature, user
 
@@ -23,7 +21,7 @@ async def static_filter(request: Request, call_next):
     if request.url.path.startswith("/static") and not request.url.path.endswith(".jpg"):
         return JSONResponse(
             {"error": "only '.jpg' pictures"},
-            status_code=409,
+            status_code=403,
         )
     response = await call_next(request)
     return response
@@ -62,3 +60,8 @@ async def download2(name: str):
         status_code=200,
     )
     return response
+
+
+@app.get("/who")
+def who_are_you(name: str = Form()):
+    return f"Greetings, {name}!"
