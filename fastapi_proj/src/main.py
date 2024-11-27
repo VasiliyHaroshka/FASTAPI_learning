@@ -18,7 +18,8 @@ app.mount(
 @app.middleware("http")
 async def static_filter(request: Request, call_next):
     """Allow only pictures end with '.jpg' """
-    if request.url.path.startswith("/static") and not request.url.path.endswith(".jpg"):
+    if (request.url.path.startswith("/static") and not
+    (request.url.path.endswith(".jpg") or request.url.path.endswith(".html"))):
         return JSONResponse(
             {"error": "only '.jpg' pictures"},
             status_code=403,
