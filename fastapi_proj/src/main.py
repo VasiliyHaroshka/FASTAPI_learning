@@ -15,17 +15,17 @@ app.mount(
 )
 
 
-@app.middleware("http")
-async def static_filter(request: Request, call_next):
-    """Allow only pictures end with '.jpg' """
-    if (request.url.path.startswith("/static") and not
-    (request.url.path.endswith(".jpg") or request.url.path.endswith(".html"))):
-        return JSONResponse(
-            {"error": "only '.jpg' pictures"},
-            status_code=403,
-        )
-    response = await call_next(request)
-    return response
+# @app.middleware("http")
+# async def static_filter(request: Request, call_next):
+#     """Allow only pictures end with '.jpg' """
+#     if (request.url.path.startswith("/static") and not
+#     (request.url.path.endswith(".jpg") or request.url.path.endswith(".html"))):
+#         return JSONResponse(
+#             {"error": "only '.jpg' pictures"},
+#             status_code=403,
+#         )
+#     response = await call_next(request)
+#     return response
 
 
 app.include_router(explorer.router)
@@ -64,10 +64,10 @@ async def download2(name: str):
 
 
 @app.get("/who")
-def who_are_you(name: str = Form()):
+def who_are_you(name: str = Form()) -> str:
     return f"Greetings, {name}!"
 
 
-@app.post("/who2")
-def who_are_you2(name: str = Form()):
+@app.post("/who")
+def who_are_you2(name: str = Form()) -> str:
     return f"Greetings, {name}!"
