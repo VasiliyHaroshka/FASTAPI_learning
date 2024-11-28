@@ -1,12 +1,20 @@
+from pathlib import Path
 from typing import Generator
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from fastapi.templating import Jinja2Templates
 
+from fake.creature import fake_creatures
+from fake.explorer import fake_explorers
 from web import explorer, creature, user
 
 app = FastAPI()
+
+root = Path(__file__).resolve().parent
+
+template_object = Jinja2Templates(directory=f"{root}/template")
 
 app.mount(
     "/static",
@@ -14,14 +22,13 @@ app.mount(
     name="static",
 )
 
-
 # @app.middleware("http")
 # async def static_filter(request: Request, call_next):
-#     """Allow only pictures end with '.jpg' """
+#     """Allow only pictures end with '.jpg'"""
 #     if (request.url.path.startswith("/static") and not
 #     (request.url.path.endswith(".jpg") or request.url.path.endswith(".html"))):
 #         return JSONResponse(
-#             {"error": "only '.jpg' pictures"},
+#             {"error": "only '.jpg' pictures or '.html' documents"},
 #             status_code=403,
 #         )
 #     response = await call_next(request)
@@ -71,3 +78,15 @@ def who_are_you(name: str = Form()) -> str:
 @app.post("/who")
 def who_are_you2(name: str = Form()) -> str:
     return f"Greetings, {name}!"
+
+
+@app.get("/list")
+def models_list(request: Request):
+    return template_object.TemplateResponse(
+        "models_list.html",
+        {
+            "request": request,
+            "creatures": fake_creatures,
+            "explorers": fake_explorers,
+        }
+    )

@@ -1,6 +1,6 @@
 from model.explorer import Explorer
 
-fake_explores = [
+fake_explorers = [
     Explorer(
         name="Bob",
         country="GB",
@@ -15,11 +15,11 @@ fake_explores = [
 
 
 def get_all() -> list[Explorer]:
-    return fake_explores
+    return fake_explorers
 
 
 def get_one(name: str) -> Explorer | None:
-    for explorer in fake_explores:
+    for explorer in fake_explorers:
         if explorer.name == name:
             return explorer
     return None
@@ -38,7 +38,7 @@ def replace(explorer: Explorer) -> Explorer:
 
 
 def delete(name: str) -> Explorer | None:
-    for explorer in fake_explores:
+    for explorer in fake_explorers:
         if explorer.name == name:
-            fake_explores.remove(explorer)
+            fake_explorers.remove(explorer)
             return None
