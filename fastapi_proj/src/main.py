@@ -1,3 +1,6 @@
+import csv
+import sys
+
 from pathlib import Path
 from typing import Generator
 
@@ -8,6 +11,7 @@ from fastapi.templating import Jinja2Templates
 
 from fake.creature import fake_creatures
 from fake.explorer import fake_explorers
+from model.explorer import Explorer
 from web import explorer, creature, user
 
 app = FastAPI()
@@ -22,17 +26,17 @@ app.mount(
     name="static",
 )
 
-# @app.middleware("http")
-# async def static_filter(request: Request, call_next):
-#     """Allow only pictures end with '.jpg'"""
-#     if (request.url.path.startswith("/static") and not
-#     (request.url.path.endswith(".jpg") or request.url.path.endswith(".html"))):
-#         return JSONResponse(
-#             {"error": "only '.jpg' pictures or '.html' documents"},
-#             status_code=403,
-#         )
-#     response = await call_next(request)
-#     return response
+@app.middleware("http")
+async def static_filter(request: Request, call_next):
+    """Allow only pictures end with '.jpg'"""
+    if (request.url.path.startswith("/static") and not
+    (request.url.path.endswith(".jpg") or request.url.path.endswith(".html"))):
+        return JSONResponse(
+            {"error": "only '.jpg' pictures or '.html' documents"},
+            status_code=403,
+        )
+    response = await call_next(request)
+    return response
 
 
 app.include_router(explorer.router)
@@ -90,3 +94,10 @@ def models_list(request: Request):
             "explorers": fake_explorers,
         }
     )
+
+@app.get("/load_explorer_csv")
+def load_explorer_csv():
+    with open("explorers.psv") as file:
+        data = [row for row in csv.reader(file, delimiter="|")]
+    for row in data:
+        print(row)
