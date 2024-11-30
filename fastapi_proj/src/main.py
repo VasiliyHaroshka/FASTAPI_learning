@@ -26,6 +26,7 @@ app.mount(
     name="static",
 )
 
+
 @app.middleware("http")
 async def static_filter(request: Request, call_next):
     """Allow only pictures end with '.jpg'"""
@@ -95,9 +96,18 @@ def models_list(request: Request):
         }
     )
 
+
 @app.get("/load_explorer_csv")
 def load_explorer_csv():
     with open("explorers.psv") as file:
+        data = [row for row in csv.reader(file, delimiter="|")]
+    for row in data:
+        print(row)
+
+
+@app.get("/load_creature_csv")
+def load_creature_csv():
+    with open("creatures.psv") as file:
         data = [row for row in csv.reader(file, delimiter="|")]
     for row in data:
         print(row)
