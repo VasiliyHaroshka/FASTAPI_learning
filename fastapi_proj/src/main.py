@@ -101,13 +101,15 @@ def models_list(request: Request):
 def load_explorer_csv():
     with open("explorers.psv") as file:
         data = [row for row in csv.reader(file, delimiter="|")]
-    for row in data:
-        print(row)
+    headers = data[0]
+    explorers = data[1:]
+    return JSONResponse(content={"headers": headers, "explorers": explorers})
 
 
 @app.get("/load_creature_csv")
 def load_creature_csv():
     with open("creatures.psv") as file:
         data = [row for row in csv.reader(file, delimiter="|")]
-    for row in data:
-        print(row)
+    headers = data[0]
+    creatures = data[1:]
+    return JSONResponse(content={"headers": headers, "creatures": creatures})
