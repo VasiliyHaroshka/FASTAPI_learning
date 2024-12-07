@@ -5,11 +5,10 @@ class BaseSchema(BaseModel):
     pass
 
 
-class ExplorerAddSchema(BaseSchema):
+class ExplorerGetSchema(BaseModel):
     name: str
+
+
+class ExplorerAddSchema(ExplorerGetSchema):
     country: str
     description: str
-
-
-class ExplorerGetSchema(ExplorerAddSchema):
-    id: int
