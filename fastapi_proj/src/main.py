@@ -1,5 +1,4 @@
 import csv
-import sys
 
 from pathlib import Path
 from typing import Generator
@@ -11,7 +10,6 @@ from fastapi.templating import Jinja2Templates
 
 from fake.creature import fake_creatures
 from fake.explorer import fake_explorers
-from model.explorer import Explorer
 from web import explorer, creature, user
 
 app = FastAPI()
@@ -29,7 +27,7 @@ app.mount(
 
 @app.middleware("http")
 async def static_filter(request: Request, call_next):
-    """Allow only pictures end with '.jpg'"""
+    """Allow only files end with '.jpg' or '.html'"""
     if (request.url.path.startswith("/static") and not
     (request.url.path.endswith(".jpg") or request.url.path.endswith(".html"))):
         return JSONResponse(
