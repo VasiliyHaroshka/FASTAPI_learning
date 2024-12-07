@@ -8,7 +8,7 @@ from data.init import curs, IntegrityError
 from db import get_session
 from error import Duplicate, Missing
 from model.explorer import Explorer
-from schemas.explorer import ExplorerAddSchema
+from schemas.explorer import ExplorerAddSchema, ExplorerGetSchema
 
 curs.execute("""
     CREATE TABLE IF NOT EXISTS Explorer(
@@ -31,18 +31,20 @@ def model_to_dict(explorer: Explorer) -> dict:
         return explorer.model_dump()
 
 
-async def get_one(name: str, session: Depends(get_session)) -> Explorer:
-    query = select(Explorer).where(name=name)
+async def get_one(data: ExplorerGetSchema, session: Depends(get_session)) -> Explorer:
+    query = select(Explorer).where(name=data.name)
     result = await session.execute(query)
     if result:
         return result.scalars().one()
-    raise Missing(msg=f"Explorer {name} is not found")
+    raise Missing(msg=f"Explorer {data.name} is not found")
 
 
-def get_all() -> list[Explorer]:
-    query = "SELECT * FROM Explorer"
-    curs.execute(query)
-    return [row_to_model(row) for row in curs.fetchall()]
+async def get_all(session: Depends(get_session)) -> list[Explorer] | dict:
+    query = select(Explorer)
+    result = await session.execute(query)
+    if result:
+        return result.scalars().all()
+    return {"message": "there is no explorers yet"}
 
 
 # def create(explorer: Explorer) -> Explorer:
