@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from data.init import curs, IntegrityError
@@ -8,8 +9,6 @@ from db import get_session
 from error import Duplicate, Missing
 from model.explorer import Explorer
 from schemas.explorer import ExplorerAddSchema
-
-Session_dep = Annotated[AsyncSession, Depends(get_session)]
 
 curs.execute("""
     CREATE TABLE IF NOT EXISTS Explorer(
@@ -32,13 +31,11 @@ def model_to_dict(explorer: Explorer) -> dict:
         return explorer.model_dump()
 
 
-def get_one(name: str) -> Explorer:
-    query = "SELECT * FROM Explorer WHERE name=:name"
-    params = {"name": name}
-    curs.execute(query, params)
-    row = curs.fetchone()
-    if row:
-        return row_to_model(row)
+async def get_one(name: str, session: Depends(get_session)) -> Explorer:
+    query = select(Explorer).where(name=name)
+    result = await session.execute(query)
+    if result:
+        return result.scalars().one()
     raise Missing(msg=f"Explorer {name} is not found")
 
 
@@ -61,7 +58,7 @@ def get_all() -> list[Explorer]:
 #     return get_one(explorer.name)
 
 
-async def create(data: ExplorerAddSchema, session: Session_dep):
+async def create(data: ExplorerAddSchema, session: Depends(get_session)):
     new_explorer = Explorer(
         name=data.name,
         country=data.country,
