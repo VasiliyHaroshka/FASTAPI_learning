@@ -1,10 +1,7 @@
-from typing import Annotated
-
 from fastapi import Depends
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, update
 
-from data.init import curs, IntegrityError
+from data.init import curs
 from db import get_session
 from error import Duplicate, Missing
 from model.explorer import Explorer
@@ -32,10 +29,10 @@ def model_to_dict(explorer: Explorer) -> dict:
 
 
 async def get_one(data: ExplorerGetSchema, session: Depends(get_session)) -> Explorer:
-    query = select(Explorer).where(name=data.name)
+    query = select(Explorer).filter(Explorer.id == data.name)
     result = await session.execute(query)
     if result:
-        return result.scalars().one()
+        return result.scalars().first()
     raise Missing(msg=f"Explorer {data.name} is not found")
 
 
@@ -45,19 +42,6 @@ async def get_all(session: Depends(get_session)) -> list[Explorer] | dict:
     if result:
         return result.scalars().all()
     return {"message": "there is no explorers yet"}
-
-
-# def create(explorer: Explorer) -> Explorer:
-#     if not explorer:
-#         return None
-#     query = """INSERT INTO Explorer (name, country, description)
-#                 VALUES (:name, :country, :description)"""
-#     params = model_to_dict(explorer)
-#     try:
-#         curs.execute(query, params)
-#     except IntegrityError:
-#         raise Duplicate(msg=f"Explorer {explorer.name} is already exists in db")
-#     return get_one(explorer.name)
 
 
 async def create(data: ExplorerAddSchema, session: Depends(get_session)):
@@ -71,18 +55,37 @@ async def create(data: ExplorerAddSchema, session: Depends(get_session)):
     return get_one(new_explorer.name)
 
 
-def modify(name: str, explorer: Explorer) -> Explorer:
-    query = """UPDATE Explorer SET 
-    name=:name,
-    country=:country,
-    description=:description
-    WHERE name=:name_from_query"""
-    params = model_to_dict(explorer)
-    params["name_from_query"] = explorer.name
-    curs.execute(query, params)
-    if curs.rowcount == 1:
-        return get_one(explorer.name)
-    raise Missing(msg=f"Explorer {name} is not found")
+async def modify(
+        new_data: ExplorerAddSchema,
+        session=Depends(get_session)):
+    stmt = (
+        update(Explorer)
+        .filter(Explorer.name == new_data.name)
+        .values(
+            name=new_data.name,
+            country=new_data.country,
+            description=new_data.description,
+        )
+    )
+    session.add(stmt)
+    await session.commit()
+    await session.refresh(stmt)
+    explorer = get_one(data=new_data, session=session)
+    return explorer
+
+
+# def modify(name: str, explorer: Explorer) -> Explorer:
+#     query = """UPDATE Explorer SET
+#     name=:name,
+#     country=:country,
+#     description=:description
+#     WHERE name=:name_from_query"""
+#     params = model_to_dict(explorer)
+#     params["name_from_query"] = explorer.name
+#     curs.execute(query, params)
+#     if curs.rowcount == 1:
+#         return get_one(explorer.name)
+#     raise Missing(msg=f"Explorer {name} is not found")
 
 
 def delete(name: str):
