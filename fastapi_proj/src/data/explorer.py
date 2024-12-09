@@ -1,5 +1,6 @@
+import sqlalchemy
 from fastapi import Depends
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 
 from data.init import curs
 from db import get_session
@@ -76,11 +77,9 @@ async def modify(
     return explorer
 
 
-def delete(name: str):
+def delete_explorer(name: ExplorerGetSchema, session = Depends(get_session)):
     if not name:
-        return False
-    query = """DELETE FROM Explorer WHERE name=:name"""
-    params = {"name": name}
-    curs.execute(query, params)
-    if curs.rowcount != 1:
         raise Missing(msg=f"Explorer {name} is not found")
+    stmt = delete(Explorer).filter(Explorer.name == name)
+    session.execute(stmt)
+    return True
