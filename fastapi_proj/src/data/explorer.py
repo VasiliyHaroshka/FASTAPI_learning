@@ -50,6 +50,9 @@ async def create(data: ExplorerAddSchema, session: Depends(get_session)):
         country=data.country,
         description=data.description,
     )
+    all_explorers = select(Explorer)
+    if new_explorer in all_explorers:
+        raise Duplicate(msg=f"User with username = {new_explorer.name} is already exists in db")
     session.add(new_explorer)
     await session.commit()
     return get_one(new_explorer.name)
@@ -69,23 +72,8 @@ async def modify(
     )
     session.add(stmt)
     await session.commit()
-    await session.refresh(stmt)
     explorer = get_one(data=new_data, session=session)
     return explorer
-
-
-# def modify(name: str, explorer: Explorer) -> Explorer:
-#     query = """UPDATE Explorer SET
-#     name=:name,
-#     country=:country,
-#     description=:description
-#     WHERE name=:name_from_query"""
-#     params = model_to_dict(explorer)
-#     params["name_from_query"] = explorer.name
-#     curs.execute(query, params)
-#     if curs.rowcount == 1:
-#         return get_one(explorer.name)
-#     raise Missing(msg=f"Explorer {name} is not found")
 
 
 def delete(name: str):
