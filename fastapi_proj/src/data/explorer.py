@@ -1,4 +1,3 @@
-import sqlalchemy
 from fastapi import Depends
 from sqlalchemy import select, update, delete
 
@@ -37,7 +36,7 @@ async def get_one(data: ExplorerGetSchema, session: Depends(get_session)) -> Exp
     raise Missing(msg=f"Explorer {data.name} is not found")
 
 
-async def get_all(session: Depends(get_session)) -> list[Explorer] | dict:
+async def get_all(session) -> list[Explorer] | dict:
     query = select(Explorer)
     result = await session.execute(query)
     if result:

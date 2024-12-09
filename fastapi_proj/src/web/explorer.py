@@ -1,7 +1,9 @@
 import os
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
 
+from db import get_session
 from error import Duplicate, Missing
 from model.explorer import Explorer
 
@@ -14,8 +16,8 @@ router = APIRouter(prefix="/explorer")
 
 
 @router.get("/")
-def get_all() -> list[Explorer]:
-    return service.get_all()
+def get_all(session = Depends(get_session)) -> list[Explorer]:
+    return service.get_all(session)
 
 
 @router.get("/{name}")

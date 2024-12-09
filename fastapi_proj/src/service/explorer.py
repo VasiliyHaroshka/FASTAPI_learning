@@ -2,8 +2,8 @@ from data import explorer as data
 from model.explorer import Explorer
 
 
-def get_all() -> list[Explorer]:
-    return data.get_all()
+def get_all(session) -> list[Explorer]:
+    return data.get_all(session=session)
 
 
 def get_one(name: str) -> Explorer:
